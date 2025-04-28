@@ -1,0 +1,4 @@
+# inicializar en proyecto node.js
+npm init -y 
+#instalar librerias
+npm install express mysql2 dotenv cors body-parser
