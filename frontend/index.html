@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <script type="module" src="src/main.js"></script>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -53,7 +52,10 @@
     <div class="menu-container">
       <a href="#" id="clientes-menu">Gestor de Clientes</a>
       <span class="separator">|</span>
-      <a href="#" id="vehiculos-menu">Gestor de Vehículos</a>
+      <a href="#" id="vehiculo-menu">Gestor de Vehículos</a>
+      <span class="separator">|</span>
+      <a href="#" id="recordatorio-menu">Gestor de Recordatorio</a>
+      
     </div>
 
     <!-- Sección de Clientes -->
@@ -99,42 +101,43 @@
       </div>
     </div>
 
-    <!-- Sección de Vehículos -->
-    <div id="vehiculos-section" class="section">
-      <h1>Gestor de Vehiculos</h1>
+
+    <!--sesión de vehiculo-->
+    <div id="vehiculo-section" class="section">
+      <h1>Gestor de Vehículos</h1>
       <div class="form-container">
-        <form id="vehiculos-form">
+        <form id="vehiculo-form">
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="number" id="cliente-id-input" required />
-            <label class="mdl-textfield__label" for="cliente-id-input">ID Cliente:</label>
+            <label class="mdl-textfield__label" for="cliente-id-input">Cliente ID:</label>
           </div>
-
+  
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="text" id="placa-input" required />
             <label class="mdl-textfield__label" for="placa-input">Placa:</label>
           </div>
-
+  
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="text" id="marca-input" required />
             <label class="mdl-textfield__label" for="marca-input">Marca:</label>
           </div>
-
+  
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="text" id="modelo-input" required />
             <label class="mdl-textfield__label" for="modelo-input">Modelo:</label>
           </div>
-
+  
           <div>
             <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Agregar Vehículo</button>
           </div>
         </form>
       </div>
-
+  
       <div class="table-container">
         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
           <thead>
             <tr>
-              <th>ID Cliente</th>
+              <th>Cliente ID</th>
               <th>Placa</th>
               <th>Marca</th>
               <th>Modelo</th>
@@ -142,25 +145,94 @@
             </tr>
           </thead>
           <tbody id="vehiculos-list">
-           
+            
           </tbody>
         </table>
       </div>
     </div>
-
+  
     <script>
       // Mostrar la sección de clientes o vehículos al hacer clic en el menú
       document.getElementById('clientes-menu').addEventListener('click', function () {
         document.getElementById('clientes-section').classList.add('active');
-        document.getElementById('vehiculos-section').classList.remove('active');
+        document.getElementById('vehiculo-section').classList.remove('active');
       });
-
-      document.getElementById('vehiculos-menu').addEventListener('click', function () {
-        document.getElementById('vehiculos-section').classList.add('active');
+  
+      document.getElementById('vehiculo-menu').addEventListener('click', function () {
+        document.getElementById('vehiculo-section').classList.add('active');
         document.getElementById('clientes-section').classList.remove('active');
       });
     </script>
   
-</body>
-</html>
+  <!-- sesión de recordatorio -->
+  <div id="recordatorio-section" class="section">
+    <h1>Gestor de Recordatorios</h1>
+    <div class="form-container">
+      <form id="recordatorio-form">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="number" id="vehiculo-id-input" required />
+          <label class="mdl-textfield__label" for="vehiculo-id-input">Vehículo ID:</label>
+        </div>
 
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="tipo-recordatorio-input" required />
+          <label class="mdl-textfield__label" for="tipo-recordatorio-input">Tipo de Recordatorio:</label>
+        </div>
+          <br>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="fecha-vencimiento-input" required />
+          <label class="mdl-textfield__label" for="fecha-vencimiento-input">Fecha de Vencimiento:</label>
+        </div>
+
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="estado-input" required />
+          <label class="mdl-textfield__label" for="estado-input">Estado:</label>
+        </div>
+
+        <div>
+          <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Agregar Recordatorio</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="table-container">
+      <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+        <thead>
+          <tr>
+            <th>Vehículo ID</th>
+            <th>Tipo de Recordatorio</th>
+            <th>Fecha de Vencimiento</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="recordatorio-list">
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Mostrar las diferentes secciones al hacer clic en el menú
+    document.getElementById('clientes-menu').addEventListener('click', function () {
+      document.getElementById('clientes-section').classList.add('active');
+      document.getElementById('vehiculo-section').classList.remove('active');
+      document.getElementById('recordatorio-section').classList.remove('active');
+    });
+
+    document.getElementById('vehiculo-menu').addEventListener('click', function () {
+      document.getElementById('vehiculo-section').classList.add('active');
+      document.getElementById('clientes-section').classList.remove('active');
+      document.getElementById('recordatorio-section').classList.remove('active');
+    });
+
+    document.getElementById('recordatorio-menu').addEventListener('click', function () {
+      document.getElementById('recordatorio-section').classList.add('active');
+      document.getElementById('clientes-section').classList.remove('active');
+      document.getElementById('vehiculo-section').classList.remove('active');
+    });
+  </script>
+
+  </body>
+</html>

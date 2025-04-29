@@ -1,12 +1,12 @@
 // Define la URL base para la A
 const API_URL_CLIENTES = 'http://localhost:3000/clientes';
-const API_URL_VEHICULOS = 'http://localhost:3000/vehiculo';
-
+const API_URL_VEHICULO = 'http://localhost:3000/vehiculo';
+const API_URL_RECORDATORIO = "http://localhost:3000/recordatorio";
 
 document.addEventListener('DOMContentLoaded',()=>{
     obtenerClientes();
-    obtenervehiculos();
-    
+    obtenerVehiculos();
+    obtenerRecordatorios();
 
     const form = document.getElementById('cliente-form');
     form.addEventListener('submit', async (event) => {
@@ -20,18 +20,30 @@ document.addEventListener('DOMContentLoaded',()=>{
       obtenerClientes();
   });
 
-    // Formulario de vehículos
-    const formVehiculos = document.getElementById('vehiculos-form');
-    formVehiculos.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const clienteId = document.getElementById('cliente-id-input').value; 
-        const marca = document.getElementById('marca-input').value;
-        const modelo = document.getElementById('modelo-input').value;
-        const placa = document.getElementById('placa-input').value;
+    const formv = document.getElementById('vehiculo-form');
+    formv.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const id_cliente = document.getElementById('cliente-id-input').value;
+    const placa = document.getElementById('placa-input').value;
+    const marca = document.getElementById('marca-input').value;
+    const modelo = document.getElementById('modelo-input').value;
 
-        await agregarVehiculos(clienteId, marca, modelo, placa);
-        formVehiculos.reset();
-        obtenervehiculos();
+    await agregarVehiculo(id_cliente, placa, marca, modelo);
+    formv.reset();
+    obtenerVehiculos();
+  }); 
+    
+    const formRecordatorio = document.getElementById('recordatorio-form');
+    formRecordatorio.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const id_vehiculo = document.getElementById('vehiculo-id-input').value;
+    const tipo_recordatorio = document.getElementById('tipo-recordatorio-input').value;
+    const fecha_vencimiento = document.getElementById('fecha-vencimiento-input').value;
+    const estado = document.getElementById('estado-input').value;
+
+    await agregarRecordatorio(id_vehiculo, tipo_recordatorio, fecha_vencimiento, estado);
+    this.reset();
+    obtenerRecordatorios();
   });
 });
 
@@ -92,7 +104,7 @@ async function agregarCliente(nombre, email, telefono){
 async function actualizarCliente(id, nombre, email, telefono) {
   alert(id+nombre+email+telefono);
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await fetch(`${API_URL_CLIENTES}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nombre, email, telefono }),
@@ -109,7 +121,7 @@ async function actualizarCliente(id, nombre, email, telefono) {
 //Eliminar Cliente
 async function eliminarCliente(id) {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await fetch(`${API_URL_CLIENTES}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
@@ -121,87 +133,178 @@ async function eliminarCliente(id) {
   }
 }
 
-// Obtener Vehículos
-async function obtenervehiculos() {
-  const listaVehiculos = document.getElementById("vehiculos-list");
-  listaVehiculos.innerHTML = '';
+//Obtener Vehiculos
+async function obtenerVehiculos() {
+  const listaVehiculo = document.getElementById("vehiculos-list");
+  listaVehiculo.innerHTML='';
   try {
-      const response = await fetch(API_URL_VEHICULOS);
-      const vehiculos = await response.json();
-      vehiculos.forEach(vehiculo => {
-          const item = document.createElement("tr");
-          item.innerHTML = `
-              <td><input type="text" value="${vehiculo.id_cliente}" /></td>
-              <td><input type="text" value="${vehiculo.marca}" /></td>
-              <td><input type="text" value="${vehiculo.modelo}" /></td>
-              <td><input type="text" value="${vehiculo.placa}" /></td>
-              <td>
-                  <button class="btn-guardar">💾</button>
-                  <button class="btn-eliminar">🚮</button>
-              </td>`;
-          
-          const [idClienteInput, marcaInput, modeloInput, placaInput] = item.querySelectorAll('input');
-          item.querySelector('.btn-guardar').onclick = async () => {
-            await actualizarVehiculos(vehiculo.id_vehiculo, marcaInput.value, modeloInput.value, placaInput.value);
-              obtenerVehiculos();
-          };
-          item.querySelector('.btn-eliminar').onclick = async () => {
-            await eliminarVehiculos(vehiculo.id_vehiculo);
-              obtenerVehiculos();
-          };
+    const response = await fetch(`${API_URL_VEHICULO}`);
+    const vehiculos = await response.json();
+    vehiculos.forEach(vehiculo => {
+      const item = document.createElement("tr");
+        item.innerHTML = `
+          <td><input type="number" value="${vehiculo.id_cliente}" /></td>  
+          <td><input type="text" value="${vehiculo.placa}" /></td>  
+          <td><input type="text" value="${vehiculo.marca}" /></td>  
+          <td><input type="text" value="${vehiculo.modelo}" /></td> 
+          <td>
+            <button class="btn-guardar">💾</button>
+            <button class="btn-eliminar">🚮</button>
+          </td>`;
+        
+        const [clienteIdInput, placaInput, marcaInput, modeloInput] = item.querySelectorAll('input');
+        item.querySelector('.btn-guardar').onclick = async () => {
+          await actualizarVehiculo(vehiculo.id_vehiculo, clienteIdInput.value, placaInput.value, marcaInput.value, modeloInput.value);
+          obtenerVehiculos();
+        };
+        item.querySelector('.btn-eliminar').onclick = async () => {
+          await eliminarVehiculo(vehiculo.id_vehiculo);
+          obtenerVehiculos();
+        }
 
-          listaVehiculos.appendChild(item);
+        listaVehiculo.appendChild(item);
       });
   } catch (error) {
-      console.error("Error al obtener vehículos", error);
+    console.error("Error con el vehiculo", error);
   }
 }
 
-// Agregar un vehículo
-async function agregarVehiculos(clienteId, marca, modelo, placa) {
+//Agregar un Vehiculo
+async function agregarVehiculo(id_cliente, placa, marca, modelo) {
   try {
-      const response = await fetch(API_URL_VEHICULOS, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({id_vehiculo, marca, modelo, placa })
-      });
-      if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return await response.json();
+    const response = await fetch(API_URL_VEHICULO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_cliente, placa, marca, modelo })
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
   } catch (error) {
-      console.error('Error al agregar vehículo', error);
+    console.error('Error al agregar vehiculo', error);
   }
 }
 
-// Actualizar un vehículo
-async function actualizarVehiculos(id_cliente, marca, modelo, placa) {
+//Actualizar un Vehiculo
+async function actualizarVehiculo(id, id_cliente, placa, marca, modelo) {
+  alert(id + " " + id_cliente + " " + placa + " " + marca + " " + modelo);
   try {
-      const response = await fetch(`${API_URL_VEHICULOS}/${id_vehiculo}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id_cliente, marca, modelo, placa }),
-      });
-      if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return await response.json();
+    const response = await fetch(`${API_URL_VEHICULO}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_cliente, placa, marca, modelo }),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();  // Aquí puedes ver lo que devuelve el backend
+    console.log(data);
+    
   } catch (error) {
-      console.error("Error al actualizar vehículo", error);
+    console.error("Error", error);
   }
 }
 
-// Eliminar un vehículo
-async function eliminarVehiculos(id) {
+//Eliminar Vehiculo
+async function eliminarVehiculo(id) {
   try {
-      const response = await fetch(`${API_URL_VEHICULOS}/${id}`, {
-          method: "DELETE",
-      });
-      if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return await response.json();
+    const response = await fetch(`${API_URL_VEHICULO}/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
   } catch (error) {
-      console.error("Error al eliminar vehículo", error);
+    console.error("Error al eliminar vehiculo", error);
+  }
+}
+
+// Obtener Recordatorios
+async function obtenerRecordatorios() {
+  const listaRecordatorio = document.getElementById("recordatorio-list");
+  listaRecordatorio.innerHTML = '';
+  try {
+    const response = await fetch(`${API_URL_RECORDATORIO}`);
+    const recordatorios = await response.json();
+    recordatorios.forEach(recordatorio => {
+      const item = document.createElement("tr");
+      item.innerHTML = `
+        <td><input type="number" value="${recordatorio.id_vehiculo}" /></td>
+        <td><input type="text" value="${recordatorio.tipo_recordatorio}" /></td>
+        <td><input type="text" value="${recordatorio.fecha_vencimiento.substring(0,10)}" /></td>
+        <td><input type="text" value="${recordatorio.estado}" /></td>
+        <td>
+          <button class="btn-guardar">💾</button>
+          <button class="btn-eliminar">🚮</button>
+        </td>`;
+
+      const [vehiculoInput, tipoInput, fechaInput, estadoInput] = item.querySelectorAll('input');
+      
+      item.querySelector('.btn-guardar').onclick = async () => {
+        await actualizarRecordatorio(recordatorio.id_recordatorio, vehiculoInput.value, tipoInput.value, fechaInput.value, estadoInput.value);
+        obtenerRecordatorios();
+      };
+
+      item.querySelector('.btn-eliminar').onclick = async () => {
+        await eliminarRecordatorio(recordatorio.id_recordatorio);
+        obtenerRecordatorios();
+      };
+
+      listaRecordatorio.appendChild(item);
+    });
+  } catch (error) {
+    console.error("Error al obtener recordatorios:", error);
+  }
+}
+
+// Agregar Recordatorio
+async function agregarRecordatorio(id_vehiculo, tipo_recordatorio, fecha_vencimiento, estado) {
+  try {
+    const response = await fetch(API_URL_RECORDATORIO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_vehiculo, tipo_recordatorio, fecha_vencimiento, estado })
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error al agregar recordatorio:', error);
+  }
+}
+
+// Actualizar Recordatorio
+async function actualizarRecordatorio(id, id_vehiculo, tipo_recordatorio, fecha_vencimiento, estado) {
+  try {
+    const response = await fetch(`${API_URL_RECORDATORIO}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_vehiculo, tipo_recordatorio, fecha_vencimiento, estado }),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error("Error al actualizar recordatorio:", error);
+  }
+}
+
+// Eliminar Recordatorio
+async function eliminarRecordatorio(id) {
+  try {
+    const response = await fetch(`${API_URL_RECORDATORIO}/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error al eliminar recordatorio:", error);
   }
 }

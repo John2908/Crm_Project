@@ -29,8 +29,8 @@ app.use('/clientes', clientesRoutes)
 // iniciar el servidor 
 
 // ruta para vehiculos 
-const vehiculosRoutes = require('./route/vehiculos');
-app.use('/vehiculos',vehiculosRoutes)
+const vehiculoRoutes = require('./route/vehiculo');
+app.use('/vehiculo',vehiculoRoutes)
 
 // Ruta para recordatorio
 const recordatorioRoutes = require('./route/recordatorio');
