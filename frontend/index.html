@@ -9,8 +9,14 @@
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
   <link rel="stylesheet" href="src/style.css">
   <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-
+          
+  <!-- Aplicación de fondo color negro -->
   <style>
+    body {
+      background-color: #0a0a0ab7; /* Fondo negro */
+    color: #ffffff; /* Texto blanco para mejor visibilidad */
+    }
+
     .menu-container {
       display: flex;
       justify-content: center;
@@ -24,16 +30,16 @@
       padding: 10px;
       margin: 0 10px;
       font-weight: bold;
-      color: #000;
+      color: #033e4d;
     }
 
     .menu-container a:hover {
-      color: #05310a;
+      color: #ffffff;
     }
 
     .menu-container .separator {
       margin: 0 10px;
-      color: #000;
+      color: #ffffff;
       font-weight: bold;
     }
 
@@ -44,17 +50,26 @@
     .active {
       display: block;
     }
+
+    .campo-texto {
+    color: black;
+    }
+
+    .mdl-textfield__input {
+      color: black;
+    }
+
   </style>
 </head>
 
 <body>
     <!-- Menú de Navegación -->
     <div class="menu-container">
-      <a href="#" id="clientes-menu">Gestor de Clientes</a>
+      <a href="" id="clientes-menu">Gestor de Clientes</a>
       <span class="separator">|</span>
-      <a href="#" id="vehiculo-menu">Gestor de Vehículos</a>
+      <a href="" id="vehiculo-menu">Gestor de Vehículos</a>
       <span class="separator">|</span>
-      <a href="#" id="recordatorio-menu">Gestor de Recordatorio</a>
+      <a href="" id="recordatorio-menu">Gestor de Recordatorio</a>
       
     </div>
 
@@ -79,7 +94,7 @@
           </div>
 
           <div>
-            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Agregar</button>
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised" style="background-color: #033e4d; color: white;">Agregar</button>            
           </div>
         </form>
       </div>
@@ -128,7 +143,7 @@
           </div>
   
           <div>
-            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Agregar Vehículo</button>
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised" style="background-color: #033e4d; color: white;">Agregar Vehículo</button>
           </div>
         </form>
       </div>
@@ -150,19 +165,6 @@
         </table>
       </div>
     </div>
-  
-    <script>
-      // Mostrar la sección de clientes o vehículos al hacer clic en el menú
-      document.getElementById('clientes-menu').addEventListener('click', function () {
-        document.getElementById('clientes-section').classList.add('active');
-        document.getElementById('vehiculo-section').classList.remove('active');
-      });
-  
-      document.getElementById('vehiculo-menu').addEventListener('click', function () {
-        document.getElementById('vehiculo-section').classList.add('active');
-        document.getElementById('clientes-section').classList.remove('active');
-      });
-    </script>
   
   <!-- sesión de recordatorio -->
   <div id="recordatorio-section" class="section">
@@ -190,7 +192,7 @@
         </div>
 
         <div>
-          <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Agregar Recordatorio</button>
+          <button type="submit" class="mdl-button mdl-js-button mdl-button--raised" style="background-color: #033e4d; color: white;">Agregar Recordatorio</button>
         </div>
       </form>
     </div>
@@ -214,7 +216,9 @@
   </div>
 
   <script>
-    // Mostrar las diferentes secciones al hacer clic en el menú
+
+    // Mostrar las secciones al hacer clic en el menú
+    
     document.getElementById('clientes-menu').addEventListener('click', function () {
       document.getElementById('clientes-section').classList.add('active');
       document.getElementById('vehiculo-section').classList.remove('active');

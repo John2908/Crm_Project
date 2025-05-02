@@ -49,8 +49,8 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("id del URL:", id);  // Esto debería mostrar el ID recibido por el parámetro de la URL
-    console.log("datos recibidos:", req.body);  // Esto debería mostrar el cuerpo del request
+    console.log("id del URL:", id); 
+    console.log("datos recibidos:", req.body); 
 
     const { id_cliente, placa, marca, modelo } = req.body;
     const [result] = await pool.execute(
@@ -63,12 +63,10 @@ router.put("/:id", async (req, res) => {
       res.status(404).json({ message: "Vehículo no encontrado" });
     }
   } catch (err) {
-    console.error(err);  // Ver el error completo en caso de que falle
+    console.error(err);  
     res.status(500).send(err);
   }
 });
-
-
 
 // Eliminar un vehículo
 router.delete("/:id", async (req, res) => {
@@ -88,6 +86,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Exportar el router
+
 module.exports = router;
 

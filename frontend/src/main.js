@@ -3,11 +3,14 @@ const API_URL_CLIENTES = 'http://localhost:3000/clientes';
 const API_URL_VEHICULO = 'http://localhost:3000/vehiculo';
 const API_URL_RECORDATORIO = "http://localhost:3000/recordatorio";
 
+// Cuando el contenido del DOM esté completamente cargado, se ejecutan las siguientes funciones
 document.addEventListener('DOMContentLoaded',()=>{
+
     obtenerClientes();
     obtenerVehiculos();
     obtenerRecordatorios();
 
+    // Manejo del formulario de clientes
     const form = document.getElementById('cliente-form');
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -20,6 +23,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       obtenerClientes();
   });
 
+    // Manejo del formulario de vehículos
     const formv = document.getElementById('vehiculo-form');
     formv.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -33,6 +37,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     obtenerVehiculos();
   }); 
     
+    // Manejo del formulario de recordatorios
     const formRecordatorio = document.getElementById('recordatorio-form');
     formRecordatorio.addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -44,6 +49,31 @@ document.addEventListener('DOMContentLoaded',()=>{
     await agregarRecordatorio(id_vehiculo, tipo_recordatorio, fecha_vencimiento, estado);
     this.reset();
     obtenerRecordatorios();
+  });
+
+    // Navegación entre secciones del menú sin necesidad de otra pestaña
+    document.getElementById('clientes-menu').addEventListener('click', function (event) {
+      event.preventDefault();
+      history.pushState(null, '', '/clientes');
+      document.getElementById('clientes-section').classList.add('active');
+      document.getElementById('vehiculo-section').classList.remove('active');
+      document.getElementById('recordatorio-section').classList.remove('active');
+  });
+
+    document.getElementById('vehiculo-menu').addEventListener('click', function (event) {
+      event.preventDefault();
+      history.pushState(null, '', '/vehiculos');
+      document.getElementById('clientes-section').classList.remove('active');
+      document.getElementById('vehiculo-section').classList.add('active');
+      document.getElementById('recordatorio-section').classList.remove('active');
+    });
+
+    document.getElementById('recordatorio-menu').addEventListener('click', function (event) {
+      event.preventDefault();
+      history.pushState(null, '', '/recordatorios');
+      document.getElementById('clientes-section').classList.remove('active');
+      document.getElementById('vehiculo-section').classList.remove('active');
+      document.getElementById('recordatorio-section').classList.add('active');
   });
 });
 

@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Obtener un solo recordatorio por ID
+// Obtener un solo recordatorio
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -51,7 +51,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Actualizar un recordatorio
+// Actualizar recordatorio
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -92,5 +92,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Exportar el router
 module.exports = router;
