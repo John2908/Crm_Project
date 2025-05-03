@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 
-// crear un cliente
-
+// crear un cliente 
 router.post("/", async (req, res) => {
   try {
     const { nombre, email, telefono } = req.body;
